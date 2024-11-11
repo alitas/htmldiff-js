@@ -34,15 +34,13 @@
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "scripts": {
     "build": "tsup",
     "test": "vitest",
     "cover": "vitest  --coverage",
     "check": "biome check . && tsc",
-    "prepublishOnly": "pnpm run test && pnpm run build"
+    "prepublishOnly": "pnpm test run && pnpm build"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
