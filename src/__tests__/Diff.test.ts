@@ -1,5 +1,5 @@
 import { expect, it } from 'vitest';
-import HtmlDiff from '../Diff';
+import { Diff } from '../Diff';
 
 // tests from: https://github.com/Rohland/htmldiff.net/blob/master/Test.HtmlDiff/HtmlDiffSpecTests.cs
 
@@ -94,7 +94,7 @@ it.each([
 ])(
   "old text '%s', new text '%s' gives delta '%s'",
   (oldtext, newText, delta) => {
-    const result = HtmlDiff.execute(oldtext, newText);
+    const result = Diff.execute(oldtext, newText);
     expect(result).toBe(delta);
   },
 );
@@ -190,7 +190,7 @@ it.each([
 ])(
   "orphan match: old text '%s', new text '%s' gives delta '%s'",
   (oldtext, newText, delta) => {
-    const result = HtmlDiff.execute(oldtext, newText, {
+    const result = Diff.execute(oldtext, newText, {
       combineWords: true,
     });
     expect(result).toBe(delta);

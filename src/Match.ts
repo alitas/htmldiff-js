@@ -1,4 +1,4 @@
-type Match = {
+export type Match = {
   startInOld: number;
   startInNew: number;
   endInOld: number;
@@ -13,5 +13,3 @@ export const NoMatch = {
   endInOld: 0,
   startInOld: 0,
 } as const;
-
-export default Match;

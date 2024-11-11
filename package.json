@@ -2,7 +2,7 @@
   "name": "@ali-tas/htmldiff-js",
   "type": "module",
   "version": "2.0.0",
-  "packageManager": "pnpm@9.5.0+sha512.140036830124618d624a2187b50d04289d5a087f326c9edfc0ccd733d76c4f52c3a313d4fc148794a2a9d81553016004e6742e8cf850670268a7387fc220c903",
+  "packageManager": "pnpm@9.12.3",
   "description": "JavaScript port of HtmlDiff.Net which is itself a C# port of HtmlDiff",
   "author": "Ali Tas",
   "license": "ISC",
@@ -34,29 +34,20 @@
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "files": [
-    "dist"
-  ],
+  "files": ["dist"],
   "scripts": {
-    "build": "tsup ",
-    "test": "vitest --coverage",
-    "lint": "tsc && eslint ."
+    "build": "tsup",
+    "test": "vitest",
+    "cover": "vitest  --coverage",
+    "check": "biome check . && tsc",
+    "prepublishOnly": "pnpm run test && pnpm run build"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^2.22.0",
+    "@biomejs/biome": "^1.9.4",
     "@tsconfig/strictest": "^2.0.5",
-    "@vitest/coverage-v8": "^2.0.2",
-    "eslint": "^9.7.0",
-    "prettier": "^3.3.2",
-    "tsup": "^8.1.0",
-    "typescript": "^5.5.3",
-    "vitest": "^2.0.2"
-  },
-  "pnpm": {
-    "peerDependencyRules": {
-      "allowedVersions": {
-        "eslint": "9"
-      }
-    }
+    "@vitest/coverage-v8": "^2.1.4",
+    "tsup": "^8.3.5",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.4"
   }
 }

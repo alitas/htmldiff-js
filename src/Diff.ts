@@ -1,11 +1,11 @@
-import type Action from './Action';
-import type Match from './Match';
+import type { Action } from './Action';
+import type { Match } from './Match';
 import { NoMatch } from './Match';
 import { findMatch } from './MatchFinder';
-import type MatchOptions from './MatchOptions';
-import type Operation from './Operation';
-import * as Utils from './Utils';
-import * as WordSplitter from './WordSplitter';
+import type { MatchOptions } from './MatchOptions';
+import type { Operation } from './Operation';
+import { isTag, isWhiteSpace, wrapText } from './Utils';
+import { convertHtmlToListOfWords } from './WordSplitter';
 
 const specialCaseClosingTags = new Map([
   ['</strong>', 0],
@@ -72,14 +72,8 @@ function splitInputsIntoWords(
   newText: string,
   blockExpressions: RegExp[],
 ) {
-  const oldWords = WordSplitter.convertHtmlToListOfWords(
-    oldText,
-    blockExpressions,
-  );
-  const newWords = WordSplitter.convertHtmlToListOfWords(
-    newText,
-    blockExpressions,
-  );
+  const oldWords = convertHtmlToListOfWords(oldText, blockExpressions);
+  const newWords = convertHtmlToListOfWords(newText, blockExpressions);
   return { oldWords, newWords };
 }
 
@@ -113,7 +107,6 @@ function performOperation(
         newWords,
         specialTagDiffStack,
       );
-    case 'none':
     default:
       return '';
   }
@@ -183,16 +176,13 @@ function insertTag(
   const content: string[] = [];
 
   while (words[0] !== undefined) {
-    const nonTags = extractConsecutiveWords(
-      words,
-      (x: string) => !Utils.isTag(x),
-    );
+    const nonTags = extractConsecutiveWords(words, (x: string) => !isTag(x));
 
     let specialCaseTagInjection = '';
     let specialCaseTagInjectionIsbefore = false;
 
     if (nonTags.length !== 0) {
-      const text = Utils.wrapText(nonTags.join(''), tag, cssClass);
+      const text = wrapText(nonTags.join(''), tag, cssClass);
       content.push(text);
     } else {
       if (specialCaseOpeningTagRegex.test(words[0])) {
@@ -242,11 +232,11 @@ function insertTag(
       if (specialCaseTagInjectionIsbefore) {
         content.push(
           specialCaseTagInjection +
-            extractConsecutiveWords(words, Utils.isTag).join(''),
+            extractConsecutiveWords(words, isTag).join(''),
         );
       } else {
         content.push(
-          extractConsecutiveWords(words, Utils.isTag).join('') +
+          extractConsecutiveWords(words, isTag).join('') +
             specialCaseTagInjection,
         );
       }
@@ -279,18 +269,16 @@ function extractConsecutiveWords(
     }
   }
 
-  if (tagFound) {
-    const items = words.filter((_s, pos) => pos >= 0 && pos < indexOfFirstTag);
-    if (indexOfFirstTag > 0) {
-      words.splice(0, indexOfFirstTag);
-    }
-
-    return items;
-  } else {
-    const items = words.filter((_s, pos) => pos >= 0 && pos < words.length);
-    words.splice(0, words.length);
-    return items;
+  if (!tagFound) {
+    indexOfFirstTag = words.length;
   }
+
+  const items = words.filter((_s, pos) => pos >= 0 && pos < indexOfFirstTag);
+  if (indexOfFirstTag > 0) {
+    words.splice(0, indexOfFirstTag);
+  }
+
+  return items;
 }
 
 function getOperations(
@@ -381,8 +369,9 @@ function getOperations(
     positionInNew = match.endInNew;
   }
 
-  if (!combineWords) return operations;
-  else return combineOperations(operations, oldWords, newWords);
+  return combineWords
+    ? combineOperations(operations, oldWords, newWords)
+    : operations;
 }
 
 function combineOperations(
@@ -393,12 +382,12 @@ function combineOperations(
   const combinedOperations: Operation[] = [];
 
   const operationIsWhitespace = (op: Operation) =>
-    Utils.isWhiteSpace(
+    isWhiteSpace(
       oldWords
         .filter((_word, pos) => pos >= op.startInOld && pos < op.endInOld)
         .join(''),
     ) &&
-    Utils.isWhiteSpace(
+    isWhiteSpace(
       newWords
         .filter((_word, pos) => pos >= op.startInNew && pos < op.endInNew)
         .join(''),
@@ -627,4 +616,4 @@ function execute(oldText: string, newText: string, options?: DiffOptions) {
   return build(oldText, newText, options);
 }
 
-export default { execute };
+export const Diff = { execute };

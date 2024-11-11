@@ -1,11 +1,9 @@
-import type Action from './Action';
+import type { Action } from './Action';
 
-type Operation = {
+export type Operation = {
   action: Action;
   startInOld: number;
   endInOld: number;
   startInNew: number;
   endInNew: number;
 };
-
-export default Operation;

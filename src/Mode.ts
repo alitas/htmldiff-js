@@ -1,3 +1,1 @@
-type Mode = 'character' | 'tag' | 'whitespace' | 'entity';
-
-export default Mode;
+export type Mode = 'character' | 'tag' | 'whitespace' | 'entity';

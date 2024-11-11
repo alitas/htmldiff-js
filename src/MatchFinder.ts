@@ -1,6 +1,6 @@
-import type MatchOptions from './MatchOptions';
-import type Match from './Match';
-import * as Utils from './Utils';
+import type { Match } from './Match';
+import type { MatchOptions } from './MatchOptions';
+import { isWhiteSpace, stripAnyAttributes } from './Utils';
 
 function putNewWord(
   block: string[],
@@ -26,12 +26,12 @@ function normalizeForIndex(
   word: string,
   ignoreWhiteSpaceDifferences: boolean,
 ): string {
-  word = Utils.stripAnyAttributes(word);
-  if (ignoreWhiteSpaceDifferences && Utils.isWhiteSpace(word)) {
+  const stripped = stripAnyAttributes(word);
+  if (ignoreWhiteSpaceDifferences && isWhiteSpace(stripped)) {
     return ' ';
   }
 
-  return word;
+  return stripped;
 }
 
 function indexNewWords(

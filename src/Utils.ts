@@ -5,54 +5,31 @@ const wordRegex = /[\p{Script_Extensions=Latin}\d@#]+/u;
 
 const specialCaseWordTags = ['<img'];
 
-function isTag(item: string): boolean {
-  return (
-    !specialCaseWordTags.some((tag) => item !== null && item.startsWith(tag)) &&
-    tagRegex.test(item)
-  );
-}
+export const isTag = (item: string) =>
+  !specialCaseWordTags.some((tag) => item?.startsWith(tag)) &&
+  tagRegex.test(item);
 
-function stripTagAttributes(word: string): string {
+export const stripTagAttributes = (word: string) => {
   const tag = tagWordRegex.exec(word)?.[0];
+  return tag ? tag + (word.endsWith('/>') ? '/>' : '>') : word;
+};
 
-  if (tag) {
-    word = tag + (word.endsWith('/>') ? '/>' : '>');
-  }
+export const wrapText = (text: string, tagName: string, cssClass: string) =>
+  `<${tagName} class="${cssClass}">${text}</${tagName}>`;
 
-  return word;
-}
+export const isStartOfTag = (val: string) => val === '<';
 
-function wrapText(text: string, tagName: string, cssClass: string): string {
-  return `<${tagName} class="${cssClass}">${text}</${tagName}>`;
-}
+export const isEndOfTag = (val: string) => val === '>';
 
-const isStartOfTag = (val: string) => val === '<';
+export const isStartOfEntity = (val: string) => val === '&';
 
-const isEndOfTag = (val: string) => val === '>';
+export const isEndOfEntity = (val: string) => val === ';';
 
-const isStartOfEntity = (val: string) => val === '&';
-
-const isEndOfEntity = (val: string) => val === ';';
-
-const isWhiteSpace = (value: string | undefined) =>
+export const isWhiteSpace = (value: string | undefined) =>
   value !== undefined && whitespaceRegex.test(value);
 
-function stripAnyAttributes(word: string): string {
-  return isTag(word) ? stripTagAttributes(word) : word;
-}
+export const stripAnyAttributes = (word: string) =>
+  isTag(word) ? stripTagAttributes(word) : word;
 
-const isWord = (text: string | undefined) =>
+export const isWord = (text: string | undefined) =>
   text !== undefined && wordRegex.test(text);
-
-export {
-  isTag,
-  stripTagAttributes,
-  wrapText,
-  isStartOfTag,
-  isEndOfTag,
-  isStartOfEntity,
-  isEndOfEntity,
-  isWhiteSpace,
-  stripAnyAttributes,
-  isWord,
-};
