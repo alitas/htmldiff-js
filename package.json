@@ -2,7 +2,7 @@
   "name": "@ali-tas/htmldiff-js",
   "type": "module",
   "version": "2.0.1",
-  "packageManager": "pnpm@9.12.3",
+  "packageManager": "pnpm@9.15.0",
   "description": "JavaScript port of HtmlDiff.Net which is itself a C# port of HtmlDiff",
   "author": "Ali Tas",
   "license": "ISC",
@@ -45,9 +45,9 @@
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
     "@tsconfig/strictest": "^2.0.5",
-    "@vitest/coverage-v8": "^2.1.4",
+    "@vitest/coverage-v8": "^2.1.8",
     "tsup": "^8.3.5",
-    "typescript": "^5.6.3",
-    "vitest": "^2.1.4"
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
   }
 }
